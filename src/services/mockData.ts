@@ -7,8 +7,6 @@ export const mockUsers: User[] = [
     email: "admin@news.com",
     name: "John Admin",
     role: "admin",
-    avatar:
-      "https://api.dicebear.com/7.x/personas/svg?seed=john&backgroundColor=b6e3f4",
     createdAt: new Date("2024-01-01"),
   },
   {
@@ -16,8 +14,6 @@ export const mockUsers: User[] = [
     email: "employee@news.com",
     name: "Jane Writer",
     role: "employee",
-    avatar:
-      "https://api.dicebear.com/7.x/personas/svg?seed=jane&backgroundColor=c084fc",
     createdAt: new Date("2024-01-15"),
   },
   {
@@ -25,8 +21,6 @@ export const mockUsers: User[] = [
     email: "reader@news.com",
     name: "Bob Reader",
     role: "reader",
-    avatar:
-      "https://api.dicebear.com/7.x/personas/svg?seed=bob&backgroundColor=fbbf24",
     createdAt: new Date("2024-02-01"),
   },
   {
@@ -34,8 +28,6 @@ export const mockUsers: User[] = [
     email: "sarah@news.com",
     name: "Sarah Editor",
     role: "employee",
-    avatar:
-      "https://api.dicebear.com/7.x/personas/svg?seed=sarah&backgroundColor=fb7185",
     createdAt: new Date("2024-01-20"),
   },
 ];
@@ -64,7 +56,6 @@ As we look ahead, the convergence of these technologies promises to reshape indu
     publishedAt: new Date("2024-12-01"),
     createdAt: new Date("2024-11-28"),
     updatedAt: new Date("2024-11-30"),
-    imageUrl: "https://picsum.photos/800/400?random=1",
     likesCount: 42,
     commentsCount: 8,
   },
@@ -90,7 +81,6 @@ The key to success lies in the collaboration between governments, businesses, an
     publishedAt: new Date("2024-11-28"),
     createdAt: new Date("2024-11-25"),
     updatedAt: new Date("2024-11-27"),
-    imageUrl: "https://picsum.photos/800/400?random=2",
     likesCount: 35,
     commentsCount: 12,
   },
@@ -116,7 +106,6 @@ The future of work is likely to be hybrid, combining the flexibility of remote w
     publishedAt: new Date("2024-11-25"),
     createdAt: new Date("2024-11-22"),
     updatedAt: new Date("2024-11-24"),
-    imageUrl: "https://picsum.photos/800/400?random=3",
     likesCount: 28,
     commentsCount: 6,
   },
@@ -143,7 +132,6 @@ Looking forward, the integration of artificial intelligence with telemedicine pr
     tags: ["Telemedicine", "Healthcare Innovation", "Digital Health"],
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2024-12-01"),
-    imageUrl: "https://picsum.photos/800/400?random=4",
     likesCount: 0,
     commentsCount: 0,
   },
@@ -170,7 +158,6 @@ As we move forward, the most effective educational approaches will likely blend 
     tags: ["Digital Learning", "Education Technology", "Online Learning"],
     createdAt: new Date("2024-12-02"),
     updatedAt: new Date("2024-12-02"),
-    imageUrl: "https://picsum.photos/800/400?random=5",
     likesCount: 0,
     commentsCount: 0,
   },
