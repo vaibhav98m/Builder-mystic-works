@@ -32,20 +32,25 @@ const MySubmissionsFixed = () => {
 
   useEffect(() => {
     const loadUserArticles = async () => {
-      if (!user) return;
+      if (!user) {
+        setIsLoading(false);
+        return;
+      }
 
       try {
         setIsLoading(true);
         setError(null);
 
         // Get articles by the current user
-        const allArticles = await newsService.getArticles(1, {
-          authorId: user.id,
-        });
-        setArticles(allArticles.articles);
+        const result = await newsService.getArticles(1, { authorId: user.id });
+
+        // Ensure we always set an array, even if the result is unexpected
+        const articlesData = result?.articles || [];
+        setArticles(Array.isArray(articlesData) ? articlesData : []);
       } catch (err) {
         console.error("Error loading user articles:", err);
         setError("Failed to load articles");
+        setArticles([]); // Ensure articles is still an array on error
       } finally {
         setIsLoading(false);
       }
@@ -54,12 +59,13 @@ const MySubmissionsFixed = () => {
     loadUserArticles();
   }, [user]);
 
-  // Group articles by status
+  // Group articles by status with safety checks
+  const safeArticles = Array.isArray(articles) ? articles : [];
   const groupedArticles = {
-    draft: articles.filter((a) => a.status === "draft"),
-    pending: articles.filter((a) => a.status === "pending"),
-    approved: articles.filter((a) => a.status === "approved"),
-    rejected: articles.filter((a) => a.status === "rejected"),
+    draft: safeArticles.filter((a) => a.status === "draft"),
+    pending: safeArticles.filter((a) => a.status === "pending"),
+    approved: safeArticles.filter((a) => a.status === "approved"),
+    rejected: safeArticles.filter((a) => a.status === "rejected"),
   };
 
   const getStatusColor = (status: Article["status"]) => {
