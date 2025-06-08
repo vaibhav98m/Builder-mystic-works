@@ -1,8 +1,8 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -27,101 +27,17 @@ import {
   Home,
 } from "lucide-react";
 
-// Memoized NavLinks component to prevent re-renders
-const NavLinks = React.memo(
-  ({
-    mobile = false,
-    isAdmin,
-    canCreateArticles,
-    currentPath,
-  }: {
-    mobile?: boolean;
-    isAdmin: boolean;
-    canCreateArticles: boolean;
-    currentPath: string;
-  }) => (
-    <>
-      <Link
-        to="/"
-        className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-          currentPath === "/" ? "text-primary" : "text-muted-foreground"
-        } ${mobile ? "py-2" : ""}`}
-      >
-        <Home className="h-4 w-4" />
-        Home
-      </Link>
-
-      {isAdmin && (
-        <Link
-          to="/admin"
-          className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-            currentPath.startsWith("/admin")
-              ? "text-primary"
-              : "text-muted-foreground"
-          } ${mobile ? "py-2" : ""}`}
-        >
-          <Settings className="h-4 w-4" />
-          Admin
-        </Link>
-      )}
-
-      {canCreateArticles && (
-        <>
-          <Link
-            to="/create-article"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              currentPath === "/create-article"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
-          >
-            <PlusCircle className="h-4 w-4" />
-            Create Article
-          </Link>
-
-          <Link
-            to="/my-submissions"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              currentPath === "/my-submissions"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
-          >
-            <FileText className="h-4 w-4" />
-            My Articles
-          </Link>
-        </>
-      )}
-    </>
-  ),
-);
-
-NavLinks.displayName = "NavLinks";
-
 export const Header: React.FC = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Create truly stable auth state based only on user object
-  const authState = useMemo(() => {
-    if (!user) {
-      return {
-        isAuthenticated: false,
-        isAdmin: false,
-        canCreateArticles: false,
-        userRole: null,
-      };
-    }
-
-    return {
-      isAuthenticated: true,
-      isAdmin: user.role === "admin",
-      canCreateArticles: user.role === "admin" || user.role === "employee",
-      userRole: user.role,
-    };
-  }, [user?.role, user?.id]); // Only depend on user role and id
+  // Create simple auth state based on user object
+  const user = auth.user;
+  const isAuthenticated = !!user;
+  const isAdmin = user?.role === "admin";
+  const canCreateArticles = user?.role === "admin" || user?.role === "employee";
 
   const handleSearch = useCallback(
     (e: React.FormEvent) => {
@@ -134,11 +50,11 @@ export const Header: React.FC = () => {
   );
 
   const handleLogout = useCallback(() => {
-    logout();
+    auth.logout();
     navigate("/");
-  }, [logout, navigate]);
+  }, [auth, navigate]);
 
-  const getRoleColor = useCallback((role: string) => {
+  const getRoleColor = (role: string) => {
     switch (role) {
       case "admin":
         return "bg-red-100 text-red-800 border-red-300";
@@ -149,9 +65,9 @@ export const Header: React.FC = () => {
       default:
         return "bg-gray-100 text-gray-800 border-gray-300";
     }
-  }, []);
+  };
 
-  const getAvatarBackground = useCallback((role: string) => {
+  const getAvatarBackground = (role: string) => {
     switch (role) {
       case "admin":
         return "bg-red-500";
@@ -162,7 +78,7 @@ export const Header: React.FC = () => {
       default:
         return "bg-gray-500";
     }
-  }, []);
+  };
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -175,11 +91,59 @@ export const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium ml-6">
-          <NavLinks
-            isAdmin={authState.isAdmin}
-            canCreateArticles={authState.canCreateArticles}
-            currentPath={location.pathname}
-          />
+          <Link
+            to="/"
+            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+              location.pathname === "/"
+                ? "text-primary"
+                : "text-muted-foreground"
+            }`}
+          >
+            <Home className="h-4 w-4" />
+            Home
+          </Link>
+
+          {isAdmin && (
+            <Link
+              to="/admin"
+              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                location.pathname.startsWith("/admin")
+                  ? "text-primary"
+                  : "text-muted-foreground"
+              }`}
+            >
+              <Settings className="h-4 w-4" />
+              Admin
+            </Link>
+          )}
+
+          {canCreateArticles && (
+            <>
+              <Link
+                to="/create-article"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                  location.pathname === "/create-article"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              >
+                <PlusCircle className="h-4 w-4" />
+                Create Article
+              </Link>
+
+              <Link
+                to="/my-submissions"
+                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+                  location.pathname === "/my-submissions"
+                    ? "text-primary"
+                    : "text-muted-foreground"
+                }`}
+              >
+                <FileText className="h-4 w-4" />
+                My Articles
+              </Link>
+            </>
+          )}
         </nav>
 
         {/* Search */}
@@ -199,7 +163,7 @@ export const Header: React.FC = () => {
 
         {/* User Menu / Auth Buttons */}
         <div className="flex items-center space-x-4">
-          {authState.isAuthenticated && user ? (
+          {isAuthenticated && user ? (
             <>
               {/* Desktop User Menu */}
               <div className="hidden md:block">
@@ -243,7 +207,7 @@ export const Header: React.FC = () => {
                         Profile
                       </Link>
                     </DropdownMenuItem>
-                    {authState.isAdmin && (
+                    {isAdmin && (
                       <DropdownMenuItem asChild>
                         <Link to="/admin/users" className="flex items-center">
                           <Users className="mr-2 h-4 w-4" />
@@ -296,12 +260,59 @@ export const Header: React.FC = () => {
 
                       {/* Navigation */}
                       <nav className="flex flex-col space-y-2">
-                        <NavLinks
-                          mobile
-                          isAdmin={authState.isAdmin}
-                          canCreateArticles={authState.canCreateArticles}
-                          currentPath={location.pathname}
-                        />
+                        <Link
+                          to="/"
+                          className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary py-2 ${
+                            location.pathname === "/"
+                              ? "text-primary"
+                              : "text-muted-foreground"
+                          }`}
+                        >
+                          <Home className="h-4 w-4" />
+                          Home
+                        </Link>
+
+                        {isAdmin && (
+                          <Link
+                            to="/admin"
+                            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary py-2 ${
+                              location.pathname.startsWith("/admin")
+                                ? "text-primary"
+                                : "text-muted-foreground"
+                            }`}
+                          >
+                            <Settings className="h-4 w-4" />
+                            Admin
+                          </Link>
+                        )}
+
+                        {canCreateArticles && (
+                          <>
+                            <Link
+                              to="/create-article"
+                              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary py-2 ${
+                                location.pathname === "/create-article"
+                                  ? "text-primary"
+                                  : "text-muted-foreground"
+                              }`}
+                            >
+                              <PlusCircle className="h-4 w-4" />
+                              Create Article
+                            </Link>
+
+                            <Link
+                              to="/my-submissions"
+                              className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary py-2 ${
+                                location.pathname === "/my-submissions"
+                                  ? "text-primary"
+                                  : "text-muted-foreground"
+                              }`}
+                            >
+                              <FileText className="h-4 w-4" />
+                              My Articles
+                            </Link>
+                          </>
+                        )}
                       </nav>
 
                       {/* Actions */}
@@ -316,7 +327,7 @@ export const Header: React.FC = () => {
                             Profile
                           </Link>
                         </Button>
-                        {authState.isAdmin && (
+                        {isAdmin && (
                           <Button
                             variant="ghost"
                             asChild

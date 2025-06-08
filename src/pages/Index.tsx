@@ -3,7 +3,6 @@ import { useSearchParams } from "react-router-dom";
 import { useNews } from "@/contexts/NewsContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Header } from "@/components/Header";
-import { HeaderDebug } from "@/components/HeaderDebug";
 import { ArticleCard } from "@/components/ArticleCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -89,7 +88,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <HeaderDebug />
       <Header />
 
       <main className="container mx-auto px-4 py-8">

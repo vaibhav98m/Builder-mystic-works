@@ -21,90 +21,99 @@ import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 import TestRouter from "./pages/TestRouter";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5, // 5 minutes
+      retry: 1,
+    },
+  },
+});
 
-const App = () => (
-  <BrowserRouter>
-    <QueryClientProvider client={queryClient}>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
+const App = () => {
+  return (
+    <BrowserRouter>
+      <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <NewsProvider>
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/article/:id" element={<ArticlePage />} />
-              <Route path="/unauthorized" element={<Unauthorized />} />
-              <Route path="/test-router" element={<TestRouter />} />
+            <TooltipProvider>
+              <Toaster />
+              <Sonner />
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Index />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/article/:id" element={<ArticlePage />} />
+                <Route path="/unauthorized" element={<Unauthorized />} />
+                <Route path="/test-router" element={<TestRouter />} />
 
-              {/* Profile route - requires authentication */}
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <Profile />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Profile route - requires authentication */}
+                <Route
+                  path="/profile"
+                  element={
+                    <ProtectedRoute>
+                      <Profile />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Protected Routes - Require Authentication */}
-              <Route
-                path="/create-article"
-                element={
-                  <ProtectedRoute roles={["admin", "employee"]}>
-                    <CreateArticle />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Protected Routes - Require Authentication */}
+                <Route
+                  path="/create-article"
+                  element={
+                    <ProtectedRoute roles={["admin", "employee"]}>
+                      <CreateArticle />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/my-submissions"
-                element={
-                  <ProtectedRoute roles={["admin", "employee"]}>
-                    <MySubmissions />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/my-submissions"
+                  element={
+                    <ProtectedRoute roles={["admin", "employee"]}>
+                      <MySubmissions />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Admin Only Routes */}
-              <Route
-                path="/admin"
-                element={
-                  <ProtectedRoute roles={["admin"]}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
+                {/* Admin Only Routes */}
+                <Route
+                  path="/admin"
+                  element={
+                    <ProtectedRoute roles={["admin"]}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/dashboard"
-                element={
-                  <ProtectedRoute roles={["admin"]}>
-                    <AdminDashboard />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/dashboard"
+                  element={
+                    <ProtectedRoute roles={["admin"]}>
+                      <AdminDashboard />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/admin/users"
-                element={
-                  <ProtectedRoute roles={["admin"]}>
-                    <ManageUsers />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/admin/users"
+                  element={
+                    <ProtectedRoute roles={["admin"]}>
+                      <ManageUsers />
+                    </ProtectedRoute>
+                  }
+                />
 
-              {/* Catch-all route - must be last */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
+                {/* Catch-all route - must be last */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </TooltipProvider>
           </NewsProvider>
         </AuthProvider>
-      </TooltipProvider>
-    </QueryClientProvider>
-  </BrowserRouter>
-);
+      </QueryClientProvider>
+    </BrowserRouter>
+  );
+};
 
 export default App;
