@@ -14,10 +14,11 @@ interface ProtectedRouteProps {
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   requiredRole,
+  allowedRoles,
   requireAuth = true,
   redirectTo = "/login",
 }) => {
-  const { isAuthenticated, hasRole, isLoading } = useAuth();
+  const { isAuthenticated, hasRole, user, isLoading } = useAuth();
   const location = useLocation();
 
   if (isLoading) {
@@ -33,9 +34,23 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  if (requiredRole && !hasRole(requiredRole)) {
-    // User doesn't have the required role
-    return <Navigate to="/unauthorized" replace />;
+  // Check role permissions with hierarchy (admin can access everything)
+  if (requiredRole || allowedRoles) {
+    const isAdmin = hasRole("admin");
+
+    // Admin can access all pages
+    if (isAdmin) {
+      return <>{children}</>;
+    }
+
+    // Check specific role requirements for non-admin users
+    if (requiredRole && !hasRole(requiredRole)) {
+      return <Navigate to="/unauthorized" replace />;
+    }
+
+    if (allowedRoles && !allowedRoles.some((role) => hasRole(role))) {
+      return <Navigate to="/unauthorized" replace />;
+    }
   }
 
   return <>{children}</>;
