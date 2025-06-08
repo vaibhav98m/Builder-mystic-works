@@ -196,7 +196,7 @@ export const NewsProvider: React.FC<NewsProviderProps> = ({ children }) => {
     }
   };
 
-  const loadComments = async (articleId: string) => {
+  const loadComments = React.useCallback(async (articleId: string) => {
     try {
       setIsLoadingComments(true);
       const articleComments =
@@ -214,7 +214,7 @@ export const NewsProvider: React.FC<NewsProviderProps> = ({ children }) => {
     } finally {
       setIsLoadingComments(false);
     }
-  };
+  }, []); // Memoize to prevent unnecessary re-renders
 
   const createComment = async (
     articleId: string,
