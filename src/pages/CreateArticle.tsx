@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { ArrowLeft, Loader2, Plus, X, ImageIcon } from "lucide-react";
+import { ArrowLeft, Loader2, Plus, X } from "lucide-react";
 import { categories, commonTags } from "@/services/mockData";
 import { CreateArticleRequest } from "@/types";
 
@@ -38,7 +38,6 @@ const CreateArticle = () => {
     summary: "",
     category: "",
     tags: [],
-    imageUrl: "",
   });
 
   const [newTag, setNewTag] = useState("");
@@ -380,8 +379,7 @@ const CreateArticle = () => {
                       • Use relevant tags to help readers discover your content
                     </li>
                     <li>
-                      • Add a featured image to make your article more visually
-                      appealing
+                      • Choose an appropriate category to help with organization
                     </li>
                   </ul>
                 </div>
