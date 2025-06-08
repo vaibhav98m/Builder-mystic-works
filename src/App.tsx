@@ -19,6 +19,7 @@ import ManageUsers from "./pages/ManageUsers";
 import Profile from "./pages/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
+import TestRouter from "./pages/TestRouter";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,7 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/article/:id" element={<ArticlePage />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="/test-router" element={<TestRouter />} />
 
               {/* Profile route - requires authentication */}
               <Route
