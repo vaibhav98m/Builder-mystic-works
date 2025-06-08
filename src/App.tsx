@@ -15,6 +15,7 @@ import ArticlePage from "./pages/ArticlePage";
 import CreateArticle from "./pages/CreateArticle";
 import MySubmissions from "./pages/MySubmissions";
 import AdminDashboard from "./pages/AdminDashboard";
+import ManageUsers from "./pages/ManageUsers";
 import Profile from "./pages/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
@@ -81,6 +82,15 @@ const App = () => (
                 element={
                   <ProtectedRoute roles={["admin"]}>
                     <AdminDashboard />
+                  </ProtectedRoute>
+                }
+              />
+
+              <Route
+                path="/admin/users"
+                element={
+                  <ProtectedRoute roles={["admin"]}>
+                    <ManageUsers />
                   </ProtectedRoute>
                 }
               />
