@@ -1,114 +1,96 @@
+import React from "react";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { NewsProvider } from "@/contexts/NewsContext";
-import { ProtectedRoute } from "@/components/ProtectedRoute";
 
-// Pages
+// Import pages
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
-import ArticlePage from "./pages/ArticlePage";
-import CreateArticle from "./pages/CreateArticle";
 import MySubmissions from "./pages/MySubmissions";
 import AdminDashboard from "./pages/AdminDashboard";
-import ManageUsers from "./pages/ManageUsers";
+import CreateArticle from "./pages/CreateArticle";
 import Profile from "./pages/Profile";
+import ManageUsers from "./pages/ManageUsers";
+import ArticlePage from "./pages/ArticlePage";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
-import TestRouter from "./pages/TestRouter";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 60 * 5, // 5 minutes
-      retry: 1,
-    },
-  },
-});
+const queryClient = new QueryClient();
 
-const App = () => {
+// Simple test header to verify React Router is working
+const TestHeader: React.FC = () => {
+  const location = useLocation();
+
+  return (
+    <div
+      style={{ padding: "10px", background: "#f0f0f0", marginBottom: "20px" }}
+    >
+      <div style={{ marginBottom: "10px" }}>
+        <strong>Current Path: {location.pathname}</strong>
+      </div>
+      <nav style={{ display: "flex", gap: "20px" }}>
+        <Link to="/" style={{ color: "blue", textDecoration: "underline" }}>
+          Home
+        </Link>
+        <Link
+          to="/my-submissions"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          My Submissions
+        </Link>
+        <Link
+          to="/admin"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          Admin
+        </Link>
+        <Link
+          to="/create-article"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          Create Article
+        </Link>
+        <Link
+          to="/login"
+          style={{ color: "blue", textDecoration: "underline" }}
+        >
+          Login
+        </Link>
+      </nav>
+    </div>
+  );
+};
+
+const App: React.FC = () => {
   return (
     <BrowserRouter>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <NewsProvider>
-            <TooltipProvider>
-              <Toaster />
-              <Sonner />
-              <Routes>
-                {/* Public Routes */}
-                <Route path="/" element={<Index />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/article/:id" element={<ArticlePage />} />
-                <Route path="/unauthorized" element={<Unauthorized />} />
-                <Route path="/test-router" element={<TestRouter />} />
-
-                {/* Profile route - requires authentication */}
-                <Route
-                  path="/profile"
-                  element={
-                    <ProtectedRoute>
-                      <Profile />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Protected Routes - Require Authentication */}
-                <Route
-                  path="/create-article"
-                  element={
-                    <ProtectedRoute roles={["admin", "employee"]}>
-                      <CreateArticle />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/my-submissions"
-                  element={
-                    <ProtectedRoute roles={["admin", "employee"]}>
-                      <MySubmissions />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Admin Only Routes */}
-                <Route
-                  path="/admin"
-                  element={
-                    <ProtectedRoute roles={["admin"]}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/admin/dashboard"
-                  element={
-                    <ProtectedRoute roles={["admin"]}>
-                      <AdminDashboard />
-                    </ProtectedRoute>
-                  }
-                />
-
-                <Route
-                  path="/admin/users"
-                  element={
-                    <ProtectedRoute roles={["admin"]}>
-                      <ManageUsers />
-                    </ProtectedRoute>
-                  }
-                />
-
-                {/* Catch-all route - must be last */}
-                <Route path="*" element={<NotFound />} />
-              </Routes>
-            </TooltipProvider>
+            <Toaster />
+            <TestHeader />
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/my-submissions" element={<MySubmissions />} />
+              <Route path="/admin" element={<AdminDashboard />} />
+              <Route path="/admin/users" element={<ManageUsers />} />
+              <Route path="/create-article" element={<CreateArticle />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/article/:id" element={<ArticlePage />} />
+              <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
           </NewsProvider>
         </AuthProvider>
       </QueryClientProvider>
