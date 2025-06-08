@@ -42,8 +42,11 @@ const ArticlePage = () => {
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    let mounted = true;
+
     const loadArticle = async () => {
       if (!id) {
         navigate("/");
@@ -51,23 +54,37 @@ const ArticlePage = () => {
       }
 
       try {
-        setIsLoading(true);
+        if (mounted) {
+          setIsLoading(true);
+          setError(null);
+        }
+
         const articleData = await getArticleById(id);
 
+        if (!mounted) return;
+
         if (!articleData) {
-          navigate("/not-found");
+          setError("Article not found");
           return;
         }
 
         setArticle(articleData);
       } catch (error) {
-        navigate("/not-found");
+        if (mounted) {
+          setError("Failed to load article");
+        }
       } finally {
-        setIsLoading(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
     loadArticle();
+
+    return () => {
+      mounted = false;
+    };
   }, [id, getArticleById, navigate]);
 
   const handleDelete = async () => {
@@ -152,7 +169,6 @@ const ArticlePage = () => {
               <div className="space-y-4">
                 <div className="h-8 bg-gray-200 rounded w-3/4"></div>
                 <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-                <div className="aspect-video bg-gray-200 rounded"></div>
                 <div className="space-y-3">
                   <div className="h-4 bg-gray-200 rounded"></div>
                   <div className="h-4 bg-gray-200 rounded"></div>
@@ -166,19 +182,33 @@ const ArticlePage = () => {
     );
   }
 
-  if (!article) {
+  if (error || !article) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
         <main className="container mx-auto px-4 py-8">
           <div className="max-w-4xl mx-auto text-center">
-            <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
+            <h1 className="text-2xl font-bold mb-4">
+              {error || "Article Not Found"}
+            </h1>
             <p className="text-muted-foreground mb-6">
-              The article you're looking for doesn't exist or has been removed.
+              {error === "Article not found"
+                ? "The article you're looking for doesn't exist or has been removed."
+                : "There was an error loading the article. Please try again."}
             </p>
-            <Button asChild>
-              <Link to="/">Back to Home</Link>
-            </Button>
+            <div className="flex gap-4 justify-center">
+              <Button asChild>
+                <Link to="/">Back to Home</Link>
+              </Button>
+              {error && error !== "Article not found" && (
+                <Button
+                  variant="outline"
+                  onClick={() => window.location.reload()}
+                >
+                  Try Again
+                </Button>
+              )}
+            </div>
           </div>
         </main>
       </div>
