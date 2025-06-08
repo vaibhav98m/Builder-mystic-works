@@ -86,18 +86,21 @@ export const NewsProvider: React.FC<NewsProviderProps> = ({ children }) => {
     }
   };
 
-  const getArticleById = async (id: string): Promise<Article | null> => {
-    try {
-      return await newsService.getArticleById(id);
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to load article",
-        variant: "destructive",
-      });
-      return null;
-    }
-  };
+  const getArticleById = React.useCallback(
+    async (id: string): Promise<Article | null> => {
+      try {
+        return await newsService.getArticleById(id);
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to load article",
+          variant: "destructive",
+        });
+        return null;
+      }
+    },
+    [],
+  ); // Memoize to prevent unnecessary re-renders
 
   const createArticle = async (
     articleData: CreateArticleRequest,
