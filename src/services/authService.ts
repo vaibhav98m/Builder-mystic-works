@@ -104,17 +104,6 @@ class AuthService {
   }
 
   hasRole(role: UserRole): boolean {
-    const hasRoleResult = this.currentUser?.role === role;
-    console.log(
-      `AuthService.hasRole(${role}):`,
-      hasRoleResult,
-      "currentUser:",
-      this.currentUser?.role,
-    );
-    return hasRoleResult;
-  }
-
-  hasRole(role: UserRole): boolean {
     return this.currentUser?.role === role;
   }
 
