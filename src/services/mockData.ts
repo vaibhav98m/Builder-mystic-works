@@ -59,8 +59,7 @@ As we look ahead, the convergence of these technologies promises to reshape indu
     tags: ["AI", "Quantum Computing", "Renewable Energy"],
     publishedAt: new Date("2024-12-01"),
     createdAt: new Date("2024-11-28"),
-    updatedAt: new Date("2024-11-30"),
-    imageUrl:
+    updatedAt: new Date('2024-11-30'),
     imageUrl: 'https://picsum.photos/800/400?random=1',
     likesCount: 42,
     commentsCount: 8,
