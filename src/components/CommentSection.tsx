@@ -73,6 +73,19 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
     return comment.authorId === user.id || hasRole("admin");
   };
 
+  const getAvatarBackground = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "bg-red-500";
+      case "employee":
+        return "bg-blue-500";
+      case "reader":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   if (isLoadingComments) {
     return (
       <div className="space-y-4">
@@ -111,8 +124,9 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
           <CardHeader className="pb-3">
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
-                <AvatarImage src={user?.avatar} alt={user?.name} />
-                <AvatarFallback>
+                <AvatarFallback
+                  className={`${getAvatarBackground(user?.role || "reader")} text-white font-semibold`}
+                >
                   {user?.name?.charAt(0).toUpperCase()}
                 </AvatarFallback>
               </Avatar>
@@ -156,15 +170,12 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
             <div key={comment.id}>
               <div className="flex gap-3">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage
-                    src={comment.author.avatar}
-                    alt={comment.author.name}
-                  />
-                  <AvatarFallback>
+                  <AvatarFallback
+                    className={`${getAvatarBackground(comment.author.role)} text-white font-semibold`}
+                  >
                     {comment.author.name.charAt(0).toUpperCase()}
                   </AvatarFallback>
                 </Avatar>
-
                 <div className="flex-1 space-y-1">
                   <div className="flex items-center gap-2">
                     <span className="font-medium text-sm">
