@@ -177,7 +177,7 @@ const MySubmissionsFixed = () => {
     );
   }
 
-  const totalArticles = articles.length;
+  const totalArticles = safeArticles.length;
 
   return (
     <div className="min-h-screen bg-gray-50">
