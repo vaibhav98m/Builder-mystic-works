@@ -34,6 +34,10 @@ function App() {
               <Route path="/register" element={<Register />} />
               <Route path="/article/:id" element={<ArticlePage />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+              <Route
+                path="/test-my-submissions"
+                element={<TestMySubmissions />}
+              />
 
               {/* Protected routes for authenticated users */}
               <Route
