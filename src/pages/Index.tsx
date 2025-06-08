@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useNews } from "@/contexts/NewsContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { Header } from "@/components/Header";
+// import { Header } from '@/components/Header'; // Temporarily disabled
 import { ArticleCard } from "@/components/ArticleCard";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -88,7 +88,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <Header />
+      {/* <Header /> Temporarily disabled */}
 
       <main className="container mx-auto px-4 py-8">
         {/* Hero Section */}
