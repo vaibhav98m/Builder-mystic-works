@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
@@ -33,19 +33,32 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
-    }
-  };
+  // Memoize auth checks to prevent unnecessary re-renders
+  const authState = useMemo(
+    () => ({
+      isAuthenticated,
+      isAdmin: isAuthenticated && hasRole("admin"),
+      isEmployee: isAuthenticated && (hasRole("admin") || hasRole("employee")),
+    }),
+    [isAuthenticated, user?.role],
+  ); // Only depend on user role, not hasRole function
 
-  const handleLogout = () => {
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      if (searchQuery.trim()) {
+        navigate(`/?search=${encodeURIComponent(searchQuery.trim())}`);
+      }
+    },
+    [searchQuery, navigate],
+  );
+
+  const handleLogout = useCallback(() => {
     logout();
     navigate("/");
-  };
+  }, [logout, navigate]);
 
-  const getRoleColor = (role: string) => {
+  const getRoleColor = useCallback((role: string) => {
     switch (role) {
       case "admin":
         return "bg-red-100 text-red-800 border-red-300";
@@ -56,9 +69,9 @@ export const Header: React.FC = () => {
       default:
         return "bg-gray-100 text-gray-800 border-gray-300";
     }
-  };
+  }, []);
 
-  const getAvatarBackground = (role: string) => {
+  const getAvatarBackground = useCallback((role: string) => {
     switch (role) {
       case "admin":
         return "bg-red-500";
@@ -69,9 +82,9 @@ export const Header: React.FC = () => {
       default:
         return "bg-gray-500";
     }
-  };
+  }, []);
 
-  const NavLinks = ({ mobile = false }: { mobile?: boolean }) => (
+  const NavLinks = React.memo(({ mobile = false }: { mobile?: boolean }) => (
     <>
       <Link
         to="/"
@@ -83,7 +96,7 @@ export const Header: React.FC = () => {
         Home
       </Link>
 
-      {isAuthenticated && hasRole("admin") && (
+      {authState.isAdmin && (
         <Link
           to="/admin"
           className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
@@ -91,16 +104,13 @@ export const Header: React.FC = () => {
               ? "text-primary"
               : "text-muted-foreground"
           } ${mobile ? "py-2" : ""}`}
-          onClick={() =>
-            console.log("Admin link clicked, navigating to /admin")
-          }
         >
           <Settings className="h-4 w-4" />
           Admin
         </Link>
       )}
 
-      {isAuthenticated && (hasRole("admin") || hasRole("employee")) && (
+      {authState.isEmployee && (
         <>
           <Link
             to="/create-article"
@@ -128,7 +138,7 @@ export const Header: React.FC = () => {
         </>
       )}
     </>
-  );
+  ));
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
@@ -161,7 +171,7 @@ export const Header: React.FC = () => {
 
         {/* User Menu / Auth Buttons */}
         <div className="flex items-center space-x-4">
-          {isAuthenticated && user ? (
+          {authState.isAuthenticated && user ? (
             <>
               {/* Desktop User Menu */}
               <div className="hidden md:block">
@@ -205,7 +215,7 @@ export const Header: React.FC = () => {
                         Profile
                       </Link>
                     </DropdownMenuItem>
-                    {hasRole("admin") && (
+                    {authState.isAdmin && (
                       <DropdownMenuItem asChild>
                         <Link to="/admin/users" className="flex items-center">
                           <Users className="mr-2 h-4 w-4" />
@@ -273,7 +283,7 @@ export const Header: React.FC = () => {
                             Profile
                           </Link>
                         </Button>
-                        {hasRole("admin") && (
+                        {authState.isAdmin && (
                           <Button
                             variant="ghost"
                             asChild
