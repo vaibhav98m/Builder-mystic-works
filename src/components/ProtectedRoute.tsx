@@ -10,7 +10,7 @@ interface ProtectedRouteProps {
   redirectTo?: string;
 }
 
-export const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
   children,
   roles,
   requireAuth = true,
