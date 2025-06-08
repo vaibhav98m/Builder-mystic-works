@@ -27,22 +27,101 @@ import {
   Home,
 } from "lucide-react";
 
+// Memoized NavLinks component to prevent re-renders
+const NavLinks = React.memo(
+  ({
+    mobile = false,
+    isAdmin,
+    canCreateArticles,
+    currentPath,
+  }: {
+    mobile?: boolean;
+    isAdmin: boolean;
+    canCreateArticles: boolean;
+    currentPath: string;
+  }) => (
+    <>
+      <Link
+        to="/"
+        className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+          currentPath === "/" ? "text-primary" : "text-muted-foreground"
+        } ${mobile ? "py-2" : ""}`}
+      >
+        <Home className="h-4 w-4" />
+        Home
+      </Link>
+
+      {isAdmin && (
+        <Link
+          to="/admin"
+          className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+            currentPath.startsWith("/admin")
+              ? "text-primary"
+              : "text-muted-foreground"
+          } ${mobile ? "py-2" : ""}`}
+        >
+          <Settings className="h-4 w-4" />
+          Admin
+        </Link>
+      )}
+
+      {canCreateArticles && (
+        <>
+          <Link
+            to="/create-article"
+            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+              currentPath === "/create-article"
+                ? "text-primary"
+                : "text-muted-foreground"
+            } ${mobile ? "py-2" : ""}`}
+          >
+            <PlusCircle className="h-4 w-4" />
+            Create Article
+          </Link>
+
+          <Link
+            to="/my-submissions"
+            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
+              currentPath === "/my-submissions"
+                ? "text-primary"
+                : "text-muted-foreground"
+            } ${mobile ? "py-2" : ""}`}
+          >
+            <FileText className="h-4 w-4" />
+            My Articles
+          </Link>
+        </>
+      )}
+    </>
+  ),
+);
+
+NavLinks.displayName = "NavLinks";
+
 export const Header: React.FC = () => {
-  const { user, logout, isAuthenticated, hasRole, canCreateArticles } =
-    useAuth();
+  const { user, logout, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Memoize auth checks to prevent unnecessary re-renders
-  const authState = useMemo(
-    () => ({
-      isAuthenticated,
-      isAdmin: hasRole("admin"),
-      canCreateArticles,
-    }),
-    [isAuthenticated, hasRole, canCreateArticles],
-  );
+  // Create truly stable auth state based only on user object
+  const authState = useMemo(() => {
+    if (!user) {
+      return {
+        isAuthenticated: false,
+        isAdmin: false,
+        canCreateArticles: false,
+        userRole: null,
+      };
+    }
+
+    return {
+      isAuthenticated: true,
+      isAdmin: user.role === "admin",
+      canCreateArticles: user.role === "admin" || user.role === "employee",
+      userRole: user.role,
+    };
+  }, [user?.role, user?.id]); // Only depend on user role and id
 
   const handleSearch = useCallback(
     (e: React.FormEvent) => {
@@ -85,62 +164,6 @@ export const Header: React.FC = () => {
     }
   }, []);
 
-  const NavLinks = React.memo(({ mobile = false }: { mobile?: boolean }) => (
-    <>
-      <Link
-        to="/"
-        className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-          location.pathname === "/" ? "text-primary" : "text-muted-foreground"
-        } ${mobile ? "py-2" : ""}`}
-      >
-        <Home className="h-4 w-4" />
-        Home
-      </Link>
-
-      {authState.isAdmin && (
-        <Link
-          to="/admin"
-          className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-            location.pathname.startsWith("/admin")
-              ? "text-primary"
-              : "text-muted-foreground"
-          } ${mobile ? "py-2" : ""}`}
-        >
-          <Settings className="h-4 w-4" />
-          Admin
-        </Link>
-      )}
-
-      {authState.canCreateArticles && (
-        <>
-          <Link
-            to="/create-article"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === "/create-article"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
-          >
-            <PlusCircle className="h-4 w-4" />
-            Create Article
-          </Link>
-
-          <Link
-            to="/my-submissions"
-            className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === "/my-submissions"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
-          >
-            <FileText className="h-4 w-4" />
-            My Articles
-          </Link>
-        </>
-      )}
-    </>
-  ));
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center">
@@ -152,7 +175,11 @@ export const Header: React.FC = () => {
 
         {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center space-x-6 text-sm font-medium ml-6">
-          <NavLinks />
+          <NavLinks
+            isAdmin={authState.isAdmin}
+            canCreateArticles={authState.canCreateArticles}
+            currentPath={location.pathname}
+          />
         </nav>
 
         {/* Search */}
@@ -269,7 +296,12 @@ export const Header: React.FC = () => {
 
                       {/* Navigation */}
                       <nav className="flex flex-col space-y-2">
-                        <NavLinks mobile />
+                        <NavLinks
+                          mobile
+                          isAdmin={authState.isAdmin}
+                          canCreateArticles={authState.canCreateArticles}
+                          currentPath={location.pathname}
+                        />
                       </nav>
 
                       {/* Actions */}
