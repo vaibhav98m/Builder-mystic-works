@@ -154,10 +154,10 @@ const CreateArticle = () => {
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
-                  </Alert>
-                )}
+                  </Select>
+                </div>
 
-                {/* Title */}
+                {/* Tags */}
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input
