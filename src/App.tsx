@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 
 // Pages
 import Index from "./pages/Index";
+import IndexSimple from "./pages/IndexSimple";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
