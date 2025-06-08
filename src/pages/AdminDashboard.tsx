@@ -219,6 +219,8 @@ const AdminDashboard = () => {
     );
   };
 
+  // Show loading for admin check
+
   if (!hasRole("admin")) {
     return (
       <div className="min-h-screen bg-background">
@@ -239,7 +241,7 @@ const AdminDashboard = () => {
     );
   }
 
-  if (isLoadingArticles || isLoadingStats) {
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
