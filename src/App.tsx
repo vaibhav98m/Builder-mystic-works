@@ -10,6 +10,7 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminDashboardSimple from "./pages/AdminDashboardSimple";
+import AdminDashboardFixed from "./pages/AdminDashboardFixed";
 import MySubmissions from "./pages/MySubmissions";
 import MySubmissionsSimple from "./pages/MySubmissionsSimple";
 import MySubmissionsFixed from "./pages/MySubmissionsFixed";
