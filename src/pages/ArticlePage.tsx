@@ -128,6 +128,19 @@ const ArticlePage = () => {
     }
   };
 
+  const getAvatarBackground = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "bg-red-500";
+      case "employee":
+        return "bg-blue-500";
+      case "reader":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="min-h-screen bg-background">
@@ -222,11 +235,9 @@ const ArticlePage = () => {
                   {/* Author */}
                   <div className="flex items-center gap-3">
                     <Avatar className="h-10 w-10">
-                      <AvatarImage
-                        src={article.author.avatar}
-                        alt={article.author.name}
-                      />
-                      <AvatarFallback>
+                      <AvatarFallback
+                        className={`${getAvatarBackground(article.author.role)} text-white font-semibold`}
+                      >
                         {article.author.name.charAt(0).toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
@@ -312,17 +323,6 @@ const ArticlePage = () => {
                 </div>
               </div>
             </header>
-
-            {/* Featured Image */}
-            {article.imageUrl && (
-              <div className="aspect-video w-full overflow-hidden rounded-lg">
-                <img
-                  src={article.imageUrl}
-                  alt={article.title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            )}
 
             {/* Content */}
             <div className="prose prose-lg max-w-none">
