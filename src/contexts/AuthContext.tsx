@@ -4,6 +4,8 @@ import React, {
   useEffect,
   useState,
   ReactNode,
+  useCallback,
+  useMemo,
 } from "react";
 import { User, LoginRequest, RegisterRequest, UserRole } from "@/types";
 import { authService } from "@/services/authService";
@@ -33,15 +35,19 @@ interface AuthProviderProps {
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isInitialized, setIsInitialized] = useState(false);
 
+  // Initialize auth state only once
   useEffect(() => {
-    // Initialize auth state
-    const currentUser = authService.getCurrentUser();
-    setUser(currentUser);
-    setIsLoading(false);
-  }, []);
+    if (!isInitialized) {
+      const currentUser = authService.getCurrentUser();
+      setUser(currentUser);
+      setIsLoading(false);
+      setIsInitialized(true);
+    }
+  }, [isInitialized]);
 
-  const login = async (credentials: LoginRequest) => {
+  const login = useCallback(async (credentials: LoginRequest) => {
     try {
       setIsLoading(true);
       const response = await authService.login(credentials);
@@ -63,9 +69,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const register = async (userData: RegisterRequest) => {
+  const register = useCallback(async (userData: RegisterRequest) => {
     try {
       setIsLoading(true);
       const response = await authService.register(userData);
@@ -87,48 +93,63 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []);
 
-  const logout = () => {
+  const logout = useCallback(() => {
     authService.logout();
     setUser(null);
     toast({
       title: "Logged Out",
       description: "You have been successfully logged out.",
     });
-  };
+  }, []);
 
-  // Memoize auth functions to prevent re-renders
-  const hasRole = React.useCallback(
-    (role: UserRole) => {
-      return authService.hasRole(role);
-    },
-    [user?.role],
-  ); // Only re-create when user role changes
+  // Memoize authentication state based on user object only
+  const authState = useMemo(() => {
+    const isAuthenticated = user !== null;
+    const userRole = user?.role;
 
-  const hasAnyRole = React.useCallback(
-    (roles: UserRole[]) => {
-      return authService.hasAnyRole(roles);
-    },
-    [user?.role],
-  );
+    return {
+      isAuthenticated,
+      hasRole: (role: UserRole) => userRole === role,
+      hasAnyRole: (roles: UserRole[]) =>
+        userRole ? roles.includes(userRole) : false,
+      canCreateArticles: userRole === "admin" || userRole === "employee",
+      canPublishArticles: userRole === "admin",
+      canManageUsers: userRole === "admin",
+      canComment: isAuthenticated,
+    };
+  }, [user]);
 
-  const contextValue: AuthContextType = React.useMemo(
+  const contextValue: AuthContextType = useMemo(
     () => ({
       user,
       isLoading,
       login,
       register,
       logout,
-      isAuthenticated: authService.isAuthenticated(),
-      hasRole,
-      hasAnyRole,
-      canCreateArticles: authService.canCreateArticles(),
-      canPublishArticles: authService.canPublishArticles(),
-      canManageUsers: authService.canManageUsers(),
-      canComment: authService.canComment(),
+      isAuthenticated: authState.isAuthenticated,
+      hasRole: authState.hasRole,
+      hasAnyRole: authState.hasAnyRole,
+      canCreateArticles: authState.canCreateArticles,
+      canPublishArticles: authState.canPublishArticles,
+      canManageUsers: authState.canManageUsers,
+      canComment: authState.canComment,
     }),
-    [user, isLoading, login, register, logout, hasRole, hasAnyRole],
+    [
+      user,
+      isLoading,
+      login,
+      register,
+      logout,
+      authState.isAuthenticated,
+      authState.hasRole,
+      authState.hasAnyRole,
+      authState.canCreateArticles,
+      authState.canPublishArticles,
+      authState.canManageUsers,
+      authState.canComment,
+    ],
   );
 
   return (
