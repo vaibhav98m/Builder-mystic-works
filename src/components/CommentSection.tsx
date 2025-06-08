@@ -42,8 +42,10 @@ export const CommentSection: React.FC<CommentSectionProps> = ({
   const articleComments = comments[articleId] || [];
 
   useEffect(() => {
-    loadComments(articleId);
-  }, [articleId, loadComments]);
+    if (articleId) {
+      loadComments(articleId);
+    }
+  }, [articleId]); // Removed loadComments dependency to prevent unnecessary re-renders
 
   const handleSubmitComment = async (e: React.FormEvent) => {
     e.preventDefault();
