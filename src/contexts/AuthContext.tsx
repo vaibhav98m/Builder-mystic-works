@@ -98,20 +98,38 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     });
   };
 
-  const contextValue: AuthContextType = {
-    user,
-    isLoading,
-    login,
-    register,
-    logout,
-    isAuthenticated: authService.isAuthenticated(),
-    hasRole: authService.hasRole.bind(authService),
-    hasAnyRole: authService.hasAnyRole.bind(authService),
-    canCreateArticles: authService.canCreateArticles(),
-    canPublishArticles: authService.canPublishArticles(),
-    canManageUsers: authService.canManageUsers(),
-    canComment: authService.canComment(),
-  };
+  // Memoize auth functions to prevent re-renders
+  const hasRole = React.useCallback(
+    (role: UserRole) => {
+      return authService.hasRole(role);
+    },
+    [user?.role],
+  ); // Only re-create when user role changes
+
+  const hasAnyRole = React.useCallback(
+    (roles: UserRole[]) => {
+      return authService.hasAnyRole(roles);
+    },
+    [user?.role],
+  );
+
+  const contextValue: AuthContextType = React.useMemo(
+    () => ({
+      user,
+      isLoading,
+      login,
+      register,
+      logout,
+      isAuthenticated: authService.isAuthenticated(),
+      hasRole,
+      hasAnyRole,
+      canCreateArticles: authService.canCreateArticles(),
+      canPublishArticles: authService.canPublishArticles(),
+      canManageUsers: authService.canManageUsers(),
+      canComment: authService.canComment(),
+    }),
+    [user, isLoading, login, register, logout, hasRole, hasAnyRole],
+  );
 
   return (
     <AuthContext.Provider value={contextValue}>{children}</AuthContext.Provider>
