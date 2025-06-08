@@ -58,6 +58,19 @@ export const Header: React.FC = () => {
     }
   };
 
+  const getAvatarBackground = (role: string) => {
+    switch (role) {
+      case "admin":
+        return "bg-red-500";
+      case "employee":
+        return "bg-blue-500";
+      case "reader":
+        return "bg-green-500";
+      default:
+        return "bg-gray-500";
+    }
+  };
+
   const NavLinks = ({ mobile = false }: { mobile?: boolean }) => (
     <>
       <Link
@@ -156,8 +169,9 @@ export const Header: React.FC = () => {
                       className="relative h-8 w-8 rounded-full"
                     >
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.avatar} alt={user.name} />
-                        <AvatarFallback>
+                        <AvatarFallback
+                          className={`${getAvatarBackground(user.role)} text-white font-semibold`}
+                        >
                           {user.name.charAt(0).toUpperCase()}
                         </AvatarFallback>
                       </Avatar>
@@ -218,8 +232,9 @@ export const Header: React.FC = () => {
                       {/* User Info */}
                       <div className="flex items-center space-x-3 p-4 border rounded-lg">
                         <Avatar className="h-10 w-10">
-                          <AvatarImage src={user.avatar} alt={user.name} />
-                          <AvatarFallback>
+                          <AvatarFallback
+                            className={`${getAvatarBackground(user.role)} text-white font-semibold`}
+                          >
                             {user.name.charAt(0).toUpperCase()}
                           </AvatarFallback>
                         </Avatar>
