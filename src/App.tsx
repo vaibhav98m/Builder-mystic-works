@@ -35,7 +35,7 @@ function App() {
           <div className="min-h-screen bg-gray-50">
             <Routes>
               {/* Public routes */}
-              <Route path="/" element={<IndexSimple />} />
+              <Route path="/" element={<IndexFixed />} />
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
               <Route path="/article/:id" element={<ArticlePage />} />
