@@ -154,10 +154,10 @@ const CreateArticle = () => {
                 {error && (
                   <Alert variant="destructive">
                     <AlertDescription>{error}</AlertDescription>
-                  </Select>
-                </div>
+                  </Alert>
+                )}
 
-                {/* Tags */}
+                {/* Title */}
                 <div className="space-y-2">
                   <Label htmlFor="title">Title *</Label>
                   <Input
@@ -211,29 +211,6 @@ const CreateArticle = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                </div>
-
-                {/* Image URL */}
-                <div className="space-y-2">
-                  <Label htmlFor="imageUrl">Featured Image URL</Label>
-                  <div className="relative">
-                    <ImageIcon className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="imageUrl"
-                      type="url"
-                      placeholder="https://example.com/image.jpg"
-                      value={formData.imageUrl}
-                      onChange={(e) =>
-                        handleInputChange("imageUrl", e.target.value)
-                      }
-                      disabled={isSubmitting}
-                      className="pl-9"
-                    />
-                  </div>
-                  <p className="text-xs text-muted-foreground">
-                    Optional: Add a featured image to make your article more
-                    engaging
-                  </p>
                 </div>
 
                 {/* Tags */}
