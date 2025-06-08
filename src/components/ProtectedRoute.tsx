@@ -32,7 +32,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to={redirectTo} state={{ from: location }} replace />;
   }
 
-  if (roles && roles.length > 0 && !hasAnyRole(roles)) {
+  if (requiredRole && !hasRole(requiredRole)) {
     // User doesn't have the required role
     return <Navigate to="/unauthorized" replace />;
   }
