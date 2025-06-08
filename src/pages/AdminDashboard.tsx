@@ -8,16 +8,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Shield, Users, FileText } from "lucide-react";
 
 const AdminDashboard = () => {
-  const { user, hasRole } = useAuth();
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    console.log("AdminDashboard mounted");
-    console.log("Current user:", user);
-    console.log("Has admin role:", hasRole("admin"));
-  }, [user, hasRole]);
-
   console.log(
     "AdminDashboard rendering - mounted:",
     mounted,
@@ -95,41 +85,45 @@ const AdminDashboard = () => {
             </div>
           </div>
 
-          {/* Simple Stats */}
+          {/* Statistics */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Total Articles</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Loading...</div>
+              <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-2 text-blue-600 mb-2">
+                  <FileText className="h-5 w-5" />
+                  <span className="text-2xl font-bold">{stats.total}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Total Articles</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Pending Review</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Loading...</div>
+              <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-2 text-yellow-600 mb-2">
+                  <Clock className="h-5 w-5" />
+                  <span className="text-2xl font-bold">{stats.pending}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Pending Review</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Published</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Loading...</div>
+              <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-2 text-green-600 mb-2">
+                  <CheckCircle className="h-5 w-5" />
+                  <span className="text-2xl font-bold">{stats.approved}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Published</p>
               </CardContent>
             </Card>
 
             <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-lg">Users</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">Loading...</div>
+              <CardContent className="p-4 text-center">
+                <div className="flex items-center justify-center gap-2 text-orange-600 mb-2">
+                  <TrendingUp className="h-5 w-5" />
+                  <span className="text-2xl font-bold">{stats.drafts}</span>
+                </div>
+                <p className="text-sm text-muted-foreground">Drafts</p>
               </CardContent>
             </Card>
           </div>
