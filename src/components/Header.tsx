@@ -91,6 +91,9 @@ export const Header: React.FC = () => {
               ? "text-primary"
               : "text-muted-foreground"
           } ${mobile ? "py-2" : ""}`}
+          onClick={() =>
+            console.log("Admin link clicked, navigating to /admin")
+          }
         >
           <Settings className="h-4 w-4" />
           Admin
