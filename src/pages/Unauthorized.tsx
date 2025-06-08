@@ -12,6 +12,12 @@ import {
 import { Shield, ArrowLeft, Home } from "lucide-react";
 
 const Unauthorized = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -48,11 +54,13 @@ const Unauthorized = () => {
                   </Link>
                 </Button>
 
-                <Button variant="outline" asChild className="w-full">
-                  <Link to="javascript:history.back()">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Go Back
-                  </Link>
+                <Button
+                  variant="outline"
+                  onClick={handleGoBack}
+                  className="w-full"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Go Back
                 </Button>
               </div>
             </CardContent>
@@ -62,5 +70,4 @@ const Unauthorized = () => {
     </div>
   );
 };
-
 export default Unauthorized;

@@ -12,6 +12,12 @@ import {
 import { FileQuestion, Home, ArrowLeft } from "lucide-react";
 
 const NotFound = () => {
+  const navigate = useNavigate();
+
+  const handleGoBack = () => {
+    window.history.back();
+  };
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -45,11 +51,13 @@ const NotFound = () => {
                   </Link>
                 </Button>
 
-                <Button variant="outline" asChild className="w-full">
-                  <Link to="javascript:history.back()">
-                    <ArrowLeft className="mr-2 h-4 w-4" />
-                    Go Back
-                  </Link>
+                <Button
+                  variant="outline"
+                  onClick={handleGoBack}
+                  className="w-full"
+                >
+                  <ArrowLeft className="mr-2 h-4 w-4" />
+                  Go Back
                 </Button>
               </div>
             </CardContent>
@@ -59,5 +67,4 @@ const NotFound = () => {
     </div>
   );
 };
-
 export default NotFound;
