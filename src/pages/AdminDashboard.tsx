@@ -49,13 +49,7 @@ import { Article } from "@/types";
 import { newsService } from "@/services/newsService";
 
 const AdminDashboard = () => {
-  const {
-    loadArticles,
-    articles,
-    isLoadingArticles,
-    updateArticle,
-    deleteArticle,
-  } = useNews();
+  const { loadArticles, articles, updateArticle, deleteArticle } = useNews();
   const { hasRole } = useAuth();
   const [stats, setStats] = useState({
     total: 0,
@@ -64,27 +58,49 @@ const AdminDashboard = () => {
     drafts: 0,
     byCategory: {} as Record<string, number>,
   });
-  const [isLoadingStats, setIsLoadingStats] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
+  const [dataLoaded, setDataLoaded] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
-      // Load all articles for admin view
-      await loadArticles(1, {}); // No filters to see all articles
+    let mounted = true;
 
-      // Load stats
+    const fetchData = async () => {
+      if (!hasRole("admin")) {
+        if (mounted) {
+          setIsLoading(false);
+        }
+        return;
+      }
+
       try {
-        const articleStats = await newsService.getArticleStats();
-        setStats(articleStats);
+        if (mounted) {
+          setIsLoading(true);
+        }
+
+        // Load all articles for admin view and stats in parallel
+        const [_, articleStats] = await Promise.all([
+          loadArticles(1, {}), // No filters to see all articles
+          newsService.getArticleStats(),
+        ]);
+
+        if (mounted) {
+          setStats(articleStats);
+          setDataLoaded(true);
+        }
       } catch (error) {
-        console.error("Failed to load stats:", error);
+        console.error("Failed to load data:", error);
       } finally {
-        setIsLoadingStats(false);
+        if (mounted) {
+          setIsLoading(false);
+        }
       }
     };
 
-    if (hasRole("admin")) {
-      fetchData();
-    }
+    fetchData();
+
+    return () => {
+      mounted = false;
+    };
   }, [hasRole, loadArticles]);
 
   const handleApprove = async (articleId: string) => {
@@ -182,19 +198,6 @@ const AdminDashboard = () => {
     </DropdownMenu>
   );
 
-  const pendingArticles = articles.filter(
-    (article) => article.status === "pending",
-  );
-  const approvedArticles = articles.filter(
-    (article) => article.status === "approved",
-  );
-  const rejectedArticles = articles.filter(
-    (article) => article.status === "rejected",
-  );
-  const draftArticles = articles.filter(
-    (article) => article.status === "draft",
-  );
-
   const renderArticleList = (articleList: Article[], emptyMessage: string) => {
     if (articleList.length === 0) {
       return (
@@ -219,29 +222,8 @@ const AdminDashboard = () => {
     );
   };
 
-  // Show loading for admin check
-
-  if (!hasRole("admin")) {
-    return (
-      <div className="min-h-screen bg-background">
-        <Header />
-        <main className="container mx-auto px-4 py-8">
-          <div className="max-w-md mx-auto text-center">
-            <Shield className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
-            <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
-            <p className="text-muted-foreground mb-6">
-              You need admin privileges to access this page.
-            </p>
-            <Button asChild>
-              <Link to="/">Back to Home</Link>
-            </Button>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  if (isLoading) {
+  // Show loading state
+  if (isLoading || !dataLoaded) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -265,6 +247,40 @@ const AdminDashboard = () => {
       </div>
     );
   }
+
+  // Check admin access after loading
+  if (!hasRole("admin")) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="max-w-md mx-auto text-center">
+            <Shield className="h-16 w-16 mx-auto mb-4 text-muted-foreground" />
+            <h1 className="text-2xl font-bold mb-2">Access Denied</h1>
+            <p className="text-muted-foreground mb-6">
+              You need admin privileges to access this page.
+            </p>
+            <Button asChild>
+              <Link to="/">Back to Home</Link>
+            </Button>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
+  const pendingArticles = articles.filter(
+    (article) => article.status === "pending",
+  );
+  const approvedArticles = articles.filter(
+    (article) => article.status === "approved",
+  );
+  const rejectedArticles = articles.filter(
+    (article) => article.status === "rejected",
+  );
+  const draftArticles = articles.filter(
+    (article) => article.status === "draft",
+  );
 
   return (
     <div className="min-h-screen bg-background">
