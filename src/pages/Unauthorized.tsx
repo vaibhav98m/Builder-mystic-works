@@ -9,9 +9,9 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { FileQuestion, Home, ArrowLeft } from "lucide-react";
+import { Shield, ArrowLeft, Home } from "lucide-react";
 
-const NotFound = () => {
+const Unauthorized = () => {
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -21,19 +21,22 @@ const NotFound = () => {
           <Card>
             <CardHeader className="text-center">
               <div className="flex justify-center mb-4">
-                <FileQuestion className="h-16 w-16 text-muted-foreground" />
+                <Shield className="h-16 w-16 text-muted-foreground" />
               </div>
-              <CardTitle className="text-2xl">Page Not Found</CardTitle>
+              <CardTitle className="text-2xl">Access Denied</CardTitle>
               <CardDescription>
-                The page you're looking for doesn't exist
+                You don't have permission to access this page
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="text-center text-sm text-muted-foreground">
-                <p>Sorry, we couldn't find the page you were looking for.</p>
+                <p>
+                  This page requires specific user privileges that your account
+                  doesn't have.
+                </p>
                 <p className="mt-2">
-                  It might have been moved, deleted, or you entered the wrong
-                  URL.
+                  If you believe this is an error, please contact an
+                  administrator.
                 </p>
               </div>
 
@@ -60,4 +63,4 @@ const NotFound = () => {
   );
 };
 
-export default NotFound;
+export default Unauthorized;
