@@ -42,10 +42,12 @@ const MySubmissionsFixed = () => {
         setError(null);
 
         // Get articles by the current user
-        const result = await newsService.getArticles(1, { authorId: user.id });
+        const result = await newsService.getArticles(1, 50, {
+          authorId: user.id,
+        });
 
         // Ensure we always set an array, even if the result is unexpected
-        const articlesData = result?.articles || [];
+        const articlesData = result?.data || [];
         setArticles(Array.isArray(articlesData) ? articlesData : []);
       } catch (err) {
         console.error("Error loading user articles:", err);
