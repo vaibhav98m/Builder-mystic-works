@@ -23,13 +23,13 @@ import NotFound from "./pages/NotFound";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <AuthProvider>
-        <NewsProvider>
-          <BrowserRouter>
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <Toaster />
+        <Sonner />
+        <AuthProvider>
+          <NewsProvider>
             <Routes>
               {/* Public Routes */}
               <Route path="/" element={<Index />} />
@@ -98,11 +98,11 @@ const App = () => (
               {/* Catch-all route - must be last */}
               <Route path="*" element={<NotFound />} />
             </Routes>
-          </BrowserRouter>
-        </NewsProvider>
-      </AuthProvider>
-    </TooltipProvider>
-  </QueryClientProvider>
+          </NewsProvider>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;
