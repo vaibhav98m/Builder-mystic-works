@@ -12,8 +12,6 @@ import {
 import { FileQuestion, Home, ArrowLeft } from "lucide-react";
 
 const NotFound = () => {
-  const navigate = useNavigate();
-
   const handleGoBack = () => {
     window.history.back();
   };
@@ -67,4 +65,5 @@ const NotFound = () => {
     </div>
   );
 };
+
 export default NotFound;

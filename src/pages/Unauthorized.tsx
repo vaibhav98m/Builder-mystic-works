@@ -12,8 +12,6 @@ import {
 import { Shield, ArrowLeft, Home } from "lucide-react";
 
 const Unauthorized = () => {
-  const navigate = useNavigate();
-
   const handleGoBack = () => {
     window.history.back();
   };
@@ -70,4 +68,5 @@ const Unauthorized = () => {
     </div>
   );
 };
+
 export default Unauthorized;
