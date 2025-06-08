@@ -16,6 +16,7 @@ import Profile from "./pages/Profile";
 import ManageUsers from "./pages/ManageUsers";
 import NotFound from "./pages/NotFound";
 import Unauthorized from "./pages/Unauthorized";
+import TestMySubmissions from "./pages/TestMySubmissions";
 
 // Components
 import ProtectedRoute from "./components/ProtectedRoute";
