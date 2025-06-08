@@ -65,30 +65,37 @@ const AdminDashboard = () => {
     let mounted = true;
 
     const fetchData = async () => {
-      if (!hasRole("admin")) {
-        if (mounted) {
-          setIsLoading(false);
-        }
-        return;
-      }
+      console.log("AdminDashboard: hasRole admin?", hasRole("admin")); // Debug log
 
       try {
         if (mounted) {
           setIsLoading(true);
         }
 
-        // Load all articles for admin view and stats in parallel
-        const [_, articleStats] = await Promise.all([
-          loadArticles(1, {}), // No filters to see all articles
-          newsService.getArticleStats(),
-        ]);
+        if (hasRole("admin")) {
+          // Load all articles for admin view and stats in parallel
+          const [_, articleStats] = await Promise.all([
+            loadArticles(1, {}), // No filters to see all articles
+            newsService.getArticleStats(),
+          ]);
 
-        if (mounted) {
-          setStats(articleStats);
-          setDataLoaded(true);
+          if (mounted) {
+            setStats(articleStats);
+            setDataLoaded(true);
+          }
+        } else {
+          console.log(
+            "AdminDashboard: User is not admin, setting dataLoaded to true",
+          );
+          if (mounted) {
+            setDataLoaded(true);
+          }
         }
       } catch (error) {
         console.error("Failed to load data:", error);
+        if (mounted) {
+          setDataLoaded(true); // Set to true even on error to show error state
+        }
       } finally {
         if (mounted) {
           setIsLoading(false);
@@ -222,8 +229,8 @@ const AdminDashboard = () => {
     );
   };
 
-  // Show loading state
-  if (isLoading || !dataLoaded) {
+  // Show loading state only while actually loading
+  if (isLoading && !dataLoaded) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
