@@ -45,18 +45,38 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({
 
   const displayDate = article.publishedAt || article.createdAt;
 
+  const getCategoryColor = (category: string) => {
+    const colors = {
+      Technology: "bg-gradient-to-br from-blue-500 to-purple-600",
+      Environment: "bg-gradient-to-br from-green-500 to-emerald-600",
+      Business: "bg-gradient-to-br from-orange-500 to-red-600",
+      Healthcare: "bg-gradient-to-br from-pink-500 to-rose-600",
+      Education: "bg-gradient-to-br from-indigo-500 to-blue-600",
+      Science: "bg-gradient-to-br from-cyan-500 to-teal-600",
+      Sports: "bg-gradient-to-br from-lime-500 to-green-600",
+      Entertainment: "bg-gradient-to-br from-purple-500 to-pink-600",
+      Politics: "bg-gradient-to-br from-slate-500 to-gray-600",
+      Finance: "bg-gradient-to-br from-yellow-500 to-orange-600",
+    };
+    return (
+      colors[category as keyof typeof colors] ||
+      "bg-gradient-to-br from-gray-500 to-slate-600"
+    );
+  };
+
   return (
     <Card className="h-full flex flex-col transition-shadow hover:shadow-lg">
-      {/* Image */}
-      {article.imageUrl && (
-        <div className="aspect-video w-full overflow-hidden rounded-t-lg">
-          <img
-            src={article.imageUrl}
-            alt={article.title}
-            className="w-full h-full object-cover transition-transform hover:scale-105"
-          />
+      {/* Colored Header */}
+      <div
+        className={`aspect-video w-full rounded-t-lg ${getCategoryColor(article.category)} flex items-center justify-center`}
+      >
+        <div className="text-white text-center p-6">
+          <div className="text-2xl font-bold mb-2">{article.category}</div>
+          <div className="text-sm opacity-90">
+            {article.tags.slice(0, 2).join(" • ")}
+          </div>
         </div>
-      )}
+      </div>
 
       <CardHeader className="flex-1">
         <div className="flex items-start justify-between gap-2">
