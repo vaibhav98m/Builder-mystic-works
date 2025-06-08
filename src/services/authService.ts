@@ -118,6 +118,10 @@ class AuthService {
     return this.currentUser?.role === role;
   }
 
+  hasAnyRole(roles: UserRole[]): boolean {
+    return this.currentUser ? roles.includes(this.currentUser.role) : false;
+  }
+
   canCreateArticles(): boolean {
     return this.hasAnyRole(["admin", "employee"]);
   }
