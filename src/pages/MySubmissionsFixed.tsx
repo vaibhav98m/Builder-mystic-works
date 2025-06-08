@@ -287,7 +287,7 @@ const MySubmissionsFixed = () => {
             </TabsList>
 
             <TabsContent value="all" className="space-y-4">
-              {articles.map(renderArticleCard)}
+              {safeArticles.map(renderArticleCard)}
             </TabsContent>
 
             <TabsContent value="draft" className="space-y-4">
