@@ -3,40 +3,36 @@ import { User, Article, Comment } from "@/types";
 // Mock users
 export const mockUsers: User[] = [
   {
-    id: "1",
-    email: "admin@news.com",
-    name: "John Admin",
-    role: "admin",
-    avatar:
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-    createdAt: new Date("2024-01-01"),
+    id: '1',
+    email: 'admin@news.com',
+    name: 'John Admin',
+    role: 'admin',
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=john&backgroundColor=b6e3f4',
+    createdAt: new Date('2024-01-01'),
   },
   {
-    id: "2",
-    email: "employee@news.com",
-    name: "Jane Writer",
-    role: "employee",
-    avatar:
-      "https://images.unsplash.com/photo-1494790108755-2616b612d6e3?w=100&h=100&fit=crop&crop=face",
-    createdAt: new Date("2024-01-15"),
+    id: '2',
+    email: 'employee@news.com',
+    name: 'Jane Writer',
+    role: 'employee',
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=jane&backgroundColor=c084fc',
+    createdAt: new Date('2024-01-15'),
   },
   {
-    id: "3",
-    email: "reader@news.com",
-    name: "Bob Reader",
-    role: "reader",
-    avatar:
-      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    createdAt: new Date("2024-02-01"),
+    id: '3',
+    email: 'reader@news.com',
+    name: 'Bob Reader',
+    role: 'reader',
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=bob&backgroundColor=fbbf24',
+    createdAt: new Date('2024-02-01'),
   },
   {
-    id: "4",
-    email: "sarah@news.com",
-    name: "Sarah Editor",
-    role: "employee",
-    avatar:
-      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    createdAt: new Date("2024-01-20"),
+    id: '4',
+    email: 'sarah@news.com',
+    name: 'Sarah Editor',
+    role: 'employee',
+    avatar: 'https://api.dicebear.com/7.x/personas/svg?seed=sarah&backgroundColor=fb7185',
+    createdAt: new Date('2024-01-20'),
   },
 ];
 
@@ -65,7 +61,7 @@ As we look ahead, the convergence of these technologies promises to reshape indu
     createdAt: new Date("2024-11-28"),
     updatedAt: new Date("2024-11-30"),
     imageUrl:
-      "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=800&h=400&fit=crop",
+    imageUrl: 'https://picsum.photos/800/400?random=1',
     likesCount: 42,
     commentsCount: 8,
   },
@@ -92,7 +88,7 @@ The key to success lies in the collaboration between governments, businesses, an
     createdAt: new Date("2024-11-25"),
     updatedAt: new Date("2024-11-27"),
     imageUrl:
-      "https://images.unsplash.com/photo-1569163139394-de44cb3c0fa9?w=800&h=400&fit=crop",
+    imageUrl: 'https://picsum.photos/800/400?random=2',
     likesCount: 35,
     commentsCount: 12,
   },
@@ -119,7 +115,7 @@ The future of work is likely to be hybrid, combining the flexibility of remote w
     createdAt: new Date("2024-11-22"),
     updatedAt: new Date("2024-11-24"),
     imageUrl:
-      "https://images.unsplash.com/photo-1600880292203-757bb62b4baf?w=800&h=400&fit=crop",
+    imageUrl: 'https://picsum.photos/800/400?random=3',
     likesCount: 28,
     commentsCount: 6,
   },
@@ -147,7 +143,7 @@ Looking forward, the integration of artificial intelligence with telemedicine pr
     createdAt: new Date("2024-12-01"),
     updatedAt: new Date("2024-12-01"),
     imageUrl:
-      "https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=800&h=400&fit=crop",
+    imageUrl: 'https://picsum.photos/800/400?random=4',
     likesCount: 0,
     commentsCount: 0,
   },
@@ -175,7 +171,7 @@ As we move forward, the most effective educational approaches will likely blend 
     createdAt: new Date("2024-12-02"),
     updatedAt: new Date("2024-12-02"),
     imageUrl:
-      "https://images.unsplash.com/photo-1503676260728-1c00da094a0b?w=800&h=400&fit=crop",
+    imageUrl: 'https://picsum.photos/800/400?random=5',
     likesCount: 0,
     commentsCount: 0,
   },
