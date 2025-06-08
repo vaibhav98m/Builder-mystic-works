@@ -15,6 +15,7 @@ import ArticlePage from "./pages/ArticlePage";
 import CreateArticle from "./pages/CreateArticle";
 import MySubmissions from "./pages/MySubmissions";
 import AdminDashboard from "./pages/AdminDashboard";
+import Profile from "./pages/Profile";
 import Unauthorized from "./pages/Unauthorized";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +36,16 @@ const App = () => (
               <Route path="/register" element={<Register />} />
               <Route path="/article/:id" element={<ArticlePage />} />
               <Route path="/unauthorized" element={<Unauthorized />} />
+
+              {/* Profile route - requires authentication */}
+              <Route
+                path="/profile"
+                element={
+                  <ProtectedRoute>
+                    <Profile />
+                  </ProtectedRoute>
+                }
+              />
 
               {/* Protected Routes - Require Authentication */}
               <Route
