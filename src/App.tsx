@@ -55,7 +55,7 @@ function App() {
                 path="/my-submissions"
                 element={
                   <ProtectedRoute requiredRole="employee">
-                    <MySubmissions />
+                    <MySubmissionsSimple />
                   </ProtectedRoute>
                 }
               />
