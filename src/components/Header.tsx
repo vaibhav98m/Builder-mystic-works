@@ -28,19 +28,17 @@ import {
 } from "lucide-react";
 
 export const Header: React.FC = () => {
-  const { user, logout, isAuthenticated, hasRole } = useAuth();
+  const { user, logout, isAuthenticated, hasRole, canCreateArticles } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState('');
 
   // Memoize auth checks to prevent unnecessary re-renders
-  const authState = useMemo(
-    () => ({
-      isAuthenticated,
-      isAdmin: isAuthenticated && hasRole("admin"),
-      isEmployee: isAuthenticated && (hasRole("admin") || hasRole("employee")),
-    }),
-    [isAuthenticated, user?.role],
+  const authState = useMemo(() => ({
+    isAuthenticated,
+    isAdmin: hasRole('admin'),
+    canCreateArticles,
+  }), [isAuthenticated, hasRole, canCreateArticles]);
   ); // Only depend on user role, not hasRole function
 
   const handleSearch = useCallback(
@@ -100,25 +98,21 @@ export const Header: React.FC = () => {
         <Link
           to="/admin"
           className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-            location.pathname.startsWith("/admin")
-              ? "text-primary"
-              : "text-muted-foreground"
-          } ${mobile ? "py-2" : ""}`}
+            location.pathname.startsWith('/admin') ? 'text-primary' : 'text-muted-foreground'
+          } ${mobile ? 'py-2' : ''}`}
         >
           <Settings className="h-4 w-4" />
           Admin
         </Link>
       )}
 
-      {authState.isEmployee && (
+      {authState.canCreateArticles && (
         <>
           <Link
             to="/create-article"
             className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === "/create-article"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
+              location.pathname === '/create-article' ? 'text-primary' : 'text-muted-foreground'
+            } ${mobile ? 'py-2' : ''}`}
           >
             <PlusCircle className="h-4 w-4" />
             Create Article
@@ -127,10 +121,8 @@ export const Header: React.FC = () => {
           <Link
             to="/my-submissions"
             className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${
-              location.pathname === "/my-submissions"
-                ? "text-primary"
-                : "text-muted-foreground"
-            } ${mobile ? "py-2" : ""}`}
+              location.pathname === '/my-submissions' ? 'text-primary' : 'text-muted-foreground'
+            } ${mobile ? 'py-2' : ''}`}
           >
             <FileText className="h-4 w-4" />
             My Articles
